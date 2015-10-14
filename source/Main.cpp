@@ -1,5 +1,6 @@
 #include "../headers/SortWrapper.h"
 #include <iostream>
+#include <cstdlib>
 #include "../headers/SelectionSort.h"
 #include "../headers/InsertionSort.h"
 #include <time.h>
