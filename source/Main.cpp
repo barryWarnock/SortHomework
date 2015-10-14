@@ -1,7 +1,8 @@
-#include "SortWrapper.h"
+#include "../headers/SortWrapper.h"
 #include <iostream>
-#include "SelectionSort.h"
-#include "InsertionSort.h"
+#include <cstdlib>
+#include "../headers/SelectionSort.h"
+#include "../headers/InsertionSort.h"
 #include <time.h>
 using namespace std;
 

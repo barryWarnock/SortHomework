@@ -1,4 +1,4 @@
-#include "SelectionSort.h"
+#include "../headers/SelectionSort.h"
 #include <algorithm>
 using namespace std;
 
