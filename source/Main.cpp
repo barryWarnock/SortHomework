@@ -1,7 +1,7 @@
-#include "SortWrapper.h"
+#include "../headers/SortWrapper.h"
 #include <iostream>
-#include "SelectionSort.h"
-#include "InsertionSort.h"
+#include "../headers/SelectionSort.h"
+#include "../headers/InsertionSort.h"
 #include <time.h>
 using namespace std;
 
@@ -18,7 +18,7 @@ int main() {
 			a[i] = rand() % num + 1;
 		}
 		cout << "Generated Numbers, sorting ..." << endl;
-		s.sort(a, num, true, SHELL);
+		s.sort(a, num, true, SELECTION);
 		for (int i = 0; i < num && i < 200; i++) {
 			cout << a[i] << " ";
 		}

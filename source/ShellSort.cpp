@@ -1,5 +1,5 @@
-#include "ShellSort.h"
-#include "InsertionSort.h"
+#include "../headers/ShellSort.h"
+#include "../headers/InsertionSort.h"
 #include <iostream>
 
 void ShellSort::generate_shell_gaps(int maxGap) {
