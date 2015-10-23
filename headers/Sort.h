@@ -1,14 +1,18 @@
 #pragma once
+#include <vector>
+#include "../headers/SortParams.h"
+using namespace std;
+template <typename T>
 class Sort {
 protected:
 	/**
-	if ascending compare returns true if the first is greater than the second integer, false otherwise
-	if decending compare returns true if the first is less than the second integer, false otherwise
+	if ascending compare functions as >, false otherwise
+	if decending compare functions as <, false otherwise
 	*/
-	bool compare(int first, int second, bool ascending);
+	bool compare(T first, T second, bool ascending);
 public:
 	/**
 
 	*/
-	virtual void sort(int arrayToSort[], int arrayLength, bool ascending) = 0;
+	virtual vector<T> sort(vector<T> vectorToSort, SortParams params) = 0;
 };

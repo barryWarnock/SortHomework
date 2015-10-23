@@ -1,11 +1,10 @@
 #pragma once
-enum SortType {
-	SELECTION,
-	INSERTION,
-	SHELL,
-};
+#include "SortParams.h"
+#include <vector>
+using namespace std;
 
 class SortWrapper {
 public:
-	void sort(int arrayToSort[], int arrayLength, bool ascending, SortType algorithm);
+	template <typename T>
+	vector<T> sort(vector<T> vectorToSort, SortParams params);
 };

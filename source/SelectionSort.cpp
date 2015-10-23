@@ -2,17 +2,18 @@
 #include <algorithm>
 using namespace std;
 
-void SelectionSort::sort(int arrayToSort[], int arrayLength, bool ascending)
+template <typename T>
+vector<T> SelectionSort<T>::sort(vector<T> vectorToSort, SortParams params)
 {
 	int nextPosition = 0;
-	while (nextPosition < arrayLength) {
+	while (nextPosition < vectorToSort.size()) {
 		int minElement = nextPosition;
-		for (int i = nextPosition; i < arrayLength; i++) {
-			if (compare(arrayToSort[minElement], arrayToSort[i], ascending)) {
+		for (int i = nextPosition; i < vectorToSort.size(); i++) {
+			if (compare(vectorToSort[minElement], vectorToSort[i], ascending)) {
 				minElement = i;
 			}
 		}
-		std::swap(arrayToSort[nextPosition], arrayToSort[minElement]);
+		std::swap(vectorToSort[nextPosition], vectorToSort[minElement]);
 		nextPosition++;
 	}
 }

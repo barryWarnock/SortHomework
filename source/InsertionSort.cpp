@@ -2,19 +2,16 @@
 #include <iostream>
 using namespace std;
 
-void InsertionSort::sort(int arrayToSort[], int arrayLength, bool ascending) {
-	sort(arrayToSort, arrayLength, ascending, 1);
-}
-
-void InsertionSort::sort(int arrayToSort[], int arrayLength, bool ascending, int gapSize)
+template<typename T>
+vector<T> InsertionSort<T>::sort(vector<T> vectorToSort, SortParams params)
 {
-	for (int i = 0; i < arrayLength; i++) {
-		int val = arrayToSort[i];
+	for (int i = 0; i < vectorToSort.size(); i++) {
+		int val = vectorToSort[i];
 		int j = i - 1;
-		while (j >= 0 && compare(arrayToSort[j], val, ascending)) {
-			arrayToSort[j + 1] = arrayToSort[j];
+		while (j >= 0 && compare(vectorToSort[j], val, ascending)) {
+			vectorToSort[j + 1] = vectorToSort[j];
 			j--;
 		}
-		arrayToSort[j+1] = val;
+		vectorToSort[j+1] = val;
 	}
 }
