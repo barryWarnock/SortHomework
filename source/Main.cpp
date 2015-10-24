@@ -1,35 +1,9 @@
-#include "../headers/SortWrapper.h"
-#include <iostream>
-#include <cstdlib>
-#include "../headers/SortParams.h"
 #include "../headers/MainState.h"
-#include <time.h>
-#include <vector>
-using namespace std;
+#include "../headers/UserSortState.h"
 
 int main() {
-	MainState state;
-	state.activate();
-	/*vector<int> a;
-	SortWrapper sortFascade;
-	srand(time(NULL));
-	int num = 1;
-	while (num > 0) {
-		cout << "\n\n\nenter number of elements to sort (enter a number < 1 to quit): ";
-		cin >> num;
-		a.clear();
-		for (int i = 0; i < num; i++) {
-			a.push_back(rand() % num + 1);
-		}
-		cout << "Generated Numbers, sorting ..." << endl;
-		
-		SortParams parameters;
-		parameters.ascending = false;
-		parameters.sortType = SHELL;
-		sortFascade.sort(a, parameters);
-		for (int i = 0; i < num && i < 200; i++) {
-			cout << a[i] << " ";
-		}
-	}*/
+	MainState mainMenu;
+	mainMenu.add_option("[sort] test sort", "sort", new UserSortState());
+	mainMenu.activate();
 	return 0;
 }
