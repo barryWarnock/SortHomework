@@ -1,29 +1,35 @@
 #include "../headers/SortWrapper.h"
 #include <iostream>
 #include <cstdlib>
-#include "../headers/SelectionSort.h"
-#include "../headers/InsertionSort.h"
+#include "../headers/SortParams.h"
+#include "../headers/MainState.h"
 #include <time.h>
+#include <vector>
 using namespace std;
 
 int main() {
-	int *a;
-	SortWrapper s;
+	MainState state;
+	state.activate();
+	/*vector<int> a;
+	SortWrapper sortFascade;
 	srand(time(NULL));
 	int num = 1;
-	while (num) {
+	while (num > 0) {
 		cout << "\n\n\nenter number of elements to sort (enter a number < 1 to quit): ";
 		cin >> num;
-		a = new(int[num]);
+		a.clear();
 		for (int i = 0; i < num; i++) {
-			a[i] = rand() % num + 1;
+			a.push_back(rand() % num + 1);
 		}
 		cout << "Generated Numbers, sorting ..." << endl;
-		s.sort(a, num, true, SELECTION);
+		
+		SortParams parameters;
+		parameters.ascending = false;
+		parameters.sortType = SHELL;
+		sortFascade.sort(a, parameters);
 		for (int i = 0; i < num && i < 200; i++) {
 			cout << a[i] << " ";
 		}
-	}
-	delete[] a;
+	}*/
 	return 0;
 }

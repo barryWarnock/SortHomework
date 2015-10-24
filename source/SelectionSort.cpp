@@ -1,18 +1,17 @@
 #include "../headers/SelectionSort.h"
 #include <algorithm>
-using namespace std;
 
-void SelectionSort::sort(int arrayToSort[], int arrayLength, bool ascending)
+void SelectionSort::sort(vector<int>& vectorToSort, SortParams params)
 {
 	int nextPosition = 0;
-	while (nextPosition < arrayLength) {
+	while (nextPosition < vectorToSort.size()) {
 		int minElement = nextPosition;
-		for (int i = nextPosition; i < arrayLength; i++) {
-			if (compare(arrayToSort[minElement], arrayToSort[i], ascending)) {
+		for (int i = nextPosition; i < vectorToSort.size(); i++) {
+			if (compare(vectorToSort[minElement], vectorToSort[i], params.ascending)) {
 				minElement = i;
 			}
 		}
-		std::swap(arrayToSort[nextPosition], arrayToSort[minElement]);
+		std::swap(vectorToSort[nextPosition], vectorToSort[minElement]);
 		nextPosition++;
 	}
 }

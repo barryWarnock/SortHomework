@@ -3,11 +3,10 @@
 #include "../headers/InsertionSort.h"
 #include "../headers/SelectionSort.h"
 #include "../headers/ShellSort.h"
-#include <iostream>
 
-void SortWrapper::sort(int arrayToSort[], int arrayLength, bool ascending, SortType algorithm) {
+void SortWrapper::sort(vector<int> &vectorToSort, SortParams params) {
 	Sort *selectedSort = NULL;
-	switch (algorithm)
+	switch (params.sortType)
 	{
 	case SELECTION:
 		selectedSort = new(SelectionSort);
@@ -20,7 +19,7 @@ void SortWrapper::sort(int arrayToSort[], int arrayLength, bool ascending, SortT
 		break;
 	}
 	if (selectedSort != NULL) {
-		selectedSort->sort(arrayToSort, arrayLength, ascending);
+		selectedSort->sort(vectorToSort, params);
 		delete selectedSort;
 	}
 }
