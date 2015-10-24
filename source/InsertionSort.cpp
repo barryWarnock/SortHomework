@@ -2,13 +2,12 @@
 #include <iostream>
 using namespace std;
 
-template<typename T>
-vector<T> InsertionSort<T>::sort(vector<T> vectorToSort, SortParams params)
+void InsertionSort::sort(vector<int> &vectorToSort, SortParams params)
 {
 	for (int i = 0; i < vectorToSort.size(); i++) {
 		int val = vectorToSort[i];
 		int j = i - 1;
-		while (j >= 0 && compare(vectorToSort[j], val, ascending)) {
+		while (j >= 0 && compare(vectorToSort[j], val, params.ascending)) {
 			vectorToSort[j + 1] = vectorToSort[j];
 			j--;
 		}

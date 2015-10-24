@@ -3,8 +3,7 @@
 #include <vector>
 using namespace std;
 
-template <typename T>
-class ShellSort: public Sort<T>
+class ShellSort: public Sort
 {
 protected:
 	vector<int> generate_shell_gaps(int maxGap);
@@ -12,6 +11,6 @@ protected:
 	vector<int> generate_lazarus_gaps(int maxGap);
 public:
 	// Inherited via Sort
-	virtual vector<T> sort(vector<T> vectorToSort, SortParams params) override;
+	virtual void sort(vector<int> &vectorToSort, SortParams params) override;
 };
 

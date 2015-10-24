@@ -4,25 +4,22 @@
 #include "../headers/SelectionSort.h"
 #include "../headers/ShellSort.h"
 
-template <typename T>
-vector<T> SortWrapper::sort(vector<T> vectorToSort, SortParams params) {
+void SortWrapper::sort(vector<int> &vectorToSort, SortParams params) {
 	Sort *selectedSort = NULL;
 	switch (params.sortType)
 	{
 	case SELECTION:
-		selectedSort = new(SelectionSort<T>);
+		selectedSort = new(SelectionSort);
 		break;
 	case INSERTION:
-		selectedSort = new(InsertionSort<T>);
+		selectedSort = new(InsertionSort);
 		break;
 	case SHELL:
-		selectedSort = new(ShellSort<T>);
+		selectedSort = new(ShellSort);
 		break;
 	}
-	vector<T> returnVector;
 	if (selectedSort != NULL) {
-		returnVector = selectedSort->sort(vectorToSort, params);
+		selectedSort->sort(vectorToSort, params);
 		delete selectedSort;
 	}
-	return returnVector;
 }

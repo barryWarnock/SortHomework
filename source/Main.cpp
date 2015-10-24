@@ -2,12 +2,15 @@
 #include <iostream>
 #include <cstdlib>
 #include "../headers/SortParams.h"
+#include "../headers/MainState.h"
 #include <time.h>
 #include <vector>
 using namespace std;
 
 int main() {
-	vector<int> a;
+	MainState state;
+	state.activate();
+	/*vector<int> a;
 	SortWrapper sortFascade;
 	srand(time(NULL));
 	int num = 1;
@@ -19,12 +22,14 @@ int main() {
 			a.push_back(rand() % num + 1);
 		}
 		cout << "Generated Numbers, sorting ..." << endl;
+		
 		SortParams parameters;
-		parameters.sortType = SELECTION;
-		a = sortFascade.sort(a, parameters);
+		parameters.ascending = false;
+		parameters.sortType = SHELL;
+		sortFascade.sort(a, parameters);
 		for (int i = 0; i < num && i < 200; i++) {
 			cout << a[i] << " ";
 		}
-	}
+	}*/
 	return 0;
 }

@@ -2,6 +2,6 @@
 SortParams::SortParams() {
 	sortType = SHELL;
 	ascending = true;
-	gapVector.push_back(0);
-	gapType = CUSTOM;
+	gapVector.push_back(1);
+	gapType = SHELL_GAP;
 }

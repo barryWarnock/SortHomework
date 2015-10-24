@@ -1,8 +1,7 @@
 #pragma once
 #include "Sort.h"
-template <typename T>
-class SelectionSort : public Sort<T> {
+class SelectionSort : public Sort {
 public:
 	// Inherited via Sort
-	virtual vector<T> sort(vector<T> vectorToSort, SortParams params) override;
+	virtual void sort(vector<int> &vectorToSort, SortParams params) override;
 };
