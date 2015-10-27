@@ -15,5 +15,8 @@ struct ExpParams : public SortParams {
 	GenerationMethod genMethod;
 	int rangeMin;
 	int rangeMax;
+	GapType gapType;
+	vector<GapType> gapTypeVector;
+	bool logMemory;
 	ExpParams();
 };

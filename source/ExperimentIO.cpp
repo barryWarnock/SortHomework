@@ -9,12 +9,11 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	if (!fileIn.is_open()) {
 		throw exception();
 	}
-	string nStart, nIncrement, nStop, generationMethod, rangeMin, rangeMax, sortType, ascending, gapType, gapSequence;
+	string nStart, nIncrement, nStop, generationMethod, rangeMin, rangeMax, sortType, ascending, logMemory, gapType;
 	rangeMin = "0";
 	rangeMax = "0";
-	gapSequence = "1";
 	vector<int> nVector;
-	vector<int> gapVector;
+	vector<GapType> gapVector;
 	fileIn >> nStart;
 	fileIn >> nIncrement;
 	fileIn >> nStop;
@@ -25,10 +24,8 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	}
 	fileIn >> sortType;
 	fileIn >> ascending;
+	fileIn >> logMemory;
 	fileIn >> gapType;
-	if (gapType == "CUSTOM") {
-		fileIn >> gapSequence;
-	}
 	int nStartNum, nIncrementNum, nStopNum;
 	istringstream(nStart) >> nStartNum;
 	istringstream(nIncrement) >> nIncrementNum;
@@ -59,6 +56,9 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	bool isAscending;
 	istringstream(ascending) >> isAscending;
 	
+	bool isLogMemory;
+	istringstream(logMemory) >> isLogMemory;
+
 	SortType selectedSortType;
 	if (sortType == "INSERTION") {
 		selectedSortType = INSERTION;
@@ -70,34 +70,32 @@ ExpParams ExperimentIO::load_experiment(string path) {
 		selectedSortType = SHELL;
 	}
 
-	numStr = "";
-	for (int i = 0; i < gapSequence.size(); i++) {
-		//I don't care about whitespace
-		if (gapSequence[i] != ' ') {
-			if (gapSequence[i] == ',') {
-				int tempNum;
-				istringstream(numStr) >> tempNum;
-				gapVector.push_back(tempNum);
-				numStr = "";
-			}
-			else {
-				numStr += gapSequence[i];
+	
+	if (gapType == "") {
+		gapVector.push_back(SHELL_GAP);
+	}
+	else {
+		string charBuffer = "";
+		for (int i = 0; i < gapType.size(); i++) {
+			//don't care about whitespace
+			if (gapType[i] != ' ') {
+				if (gapType[i] == ',') {
+					if (charBuffer == "SHELL") {
+						gapVector.push_back(SHELL_GAP);
+					}
+					else if (charBuffer == "HIBBARD") {
+						gapVector.push_back(HIBBARD_GAP);
+					}
+					else if (charBuffer == "LAZARUS") {
+						gapVector.push_back(LAZARUS_GAP);
+					}
+					charBuffer = "";
+				}
+				else {
+					charBuffer += gapType[i];
+				}
 			}
 		}
-	}
-
-	GapType selectedGapType;
-	if (gapType == "CUSTOM") {
-		selectedGapType = CUSTOM;
-	}
-	else if (gapType == "") {
-		selectedGapType = SHELL_GAP;
-	}
-	else if (gapType == "HIBBARD") {
-		selectedGapType = HIBBARD_GAP;
-	}
-	else if (gapType == "LAZARUS") {
-		selectedGapType = LAZARUS_GAP;
 	}
 
 	fileIn.close();
@@ -108,18 +106,25 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	returnParams.rangeMin = minNum;
 	returnParams.rangeMax = maxNum;
 	returnParams.ascending = isAscending;
+	returnParams.logMemory = isLogMemory;
 	returnParams.sortType = selectedSortType;
-	returnParams.gapVector = gapVector;
-	returnParams.gapType = selectedGapType;
+	returnParams.gapType = gapVector[0];
+	returnParams.gapTypeVector = gapVector;
 	return returnParams;
 }
 
-void ExperimentIO::save_results(map<int, int> averageTimes, string filename) {
+void ExperimentIO::save_results(map<int, int> averageTimes, map<int, int> averageMems, string filename) {
+	bool logMemory = (averageMems.begin() != averageMems.end());
 	ofstream fileOut;
 	fileOut.open("experiment_logs/"+filename+".csv");
-	fileOut << "n,ticks" << endl;
+	string header = (logMemory) ? ("n,ticks,memory (bytes)") : ("n,ticks");
+	fileOut << header << endl;
 	for (map<int, int>::iterator it = averageTimes.begin(); it != averageTimes.end(); it++) {
-		fileOut << it->first << "," << it->second << endl;
+		fileOut << it->first << "," << it->second;
+		if (logMemory) {
+			fileOut << "," << averageMems[it->first];
+		}
+		fileOut << endl;
 	}
 	fileOut.close();
 }

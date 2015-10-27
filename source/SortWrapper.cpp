@@ -4,6 +4,10 @@
 #include "../headers/SelectionSort.h"
 #include "../headers/ShellSort.h"
 
+#include "../headers/MemoryTracker.h"
+#include <iostream>
+using namespace std;
+
 void SortWrapper::sort(vector<int> &vectorToSort, SortParams params) {
 	Sort *selectedSort = NULL;
 	switch (params.sortType)

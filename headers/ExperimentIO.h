@@ -7,5 +7,5 @@ using namespace std;
 class ExperimentIO {
 public:
 	ExpParams load_experiment(string path);
-	void save_results(map<int, int> averageTimes, string filename);
+	void save_results(map<int, int> averageTimes, map<int, int> averageMems, string filename);
 };

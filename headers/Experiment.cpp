@@ -1,4 +1,5 @@
 #include "../headers/Experiment.h"
+#include "../headers/MemoryTracker.h"
 #include "../headers/SortWrapper.h"
 #include "../headers/Sort.h"
 #include "../headers/InsertionSort.h"
@@ -7,6 +8,7 @@
 #include "../headers/ExperimentIO.h"
 #include <time.h>
 #include <map>
+#include <sstream>
 #include <iostream>
 
 bool Experiment::runExperiment(ExpParams params, string logName) {
@@ -26,69 +28,96 @@ bool Experiment::runExperiment(ExpParams params, string logName) {
 	if (sort == NULL) return false;
 	//the key is the n and the value is the number of ms the sort takes on avg for than number of elements
 	map<int, int> avgTimeForN;
+	map<int, int> avgMemForN;
 	bool successful = true; //if a sort fails this is set to false;
-	for (vector<int>::iterator n = params.nVector.begin(); n != params.nVector.end(); n++) {
-		vector<int> timeTaken;
-		for (int i = 0; i < 5; i++) {
-			vector<int> vectorToSort;
-			switch (params.genMethod) {
-			default:
-			case RANDOM:
-				for (int j = 0; j < *n; j++) {
-					vectorToSort.push_back(rand() % RAND_MAX);
+	for (vector<GapType>::iterator gapIt = params.gapTypeVector.begin(); gapIt != params.gapTypeVector.end(); gapIt++) {
+		for (vector<int>::iterator n = params.nVector.begin(); n != params.nVector.end(); n++) {
+			vector<int> timeTaken;
+			vector<int> memTaken;
+			for (int i = 0; i < 5; i++) {
+				vector<int> vectorToSort;
+				switch (params.genMethod) {
+				default:
+				case RANDOM:
+					for (int j = 0; j < *n; j++) {
+						vectorToSort.push_back(rand() % RAND_MAX);
+					}
+					break;
+				case SORTED:
+					for (int j = 0; j < *n; j++) {
+						vectorToSort.push_back(j);
+					}
+					break;
+				case SORTED_REVERSE:
+					for (int j = *n; j > 0; j--) {
+						vectorToSort.push_back(j);
+					}
+					break;
+				case RANDOM_IN_RANGE:
+					for (int j = 0; j < *n; j++) {
+						vectorToSort.push_back((rand() % (params.rangeMax - params.rangeMin)) + params.rangeMin);
+					}
+					break;
 				}
-				break;
-			case SORTED:
-				for (int j = 0; j < *n; j++) {
-					vectorToSort.push_back(j);
-				}
-				break;
-			case SORTED_REVERSE:
-				for (int j = *n; j > 0; j--) {
-					vectorToSort.push_back(j);
-				}
-				break;
-			case RANDOM_IN_RANGE:
-				for (int j = 0; j < *n; j++) {
-					vectorToSort.push_back((rand() % (params.rangeMax - params.rangeMin)) + params.rangeMin);
-				}
-				break;
-			}
-			int timeBefore = clock();
-			sort->sort(vectorToSort, params);
-			int timeAfter = clock();
-			timeTaken.push_back(timeAfter - timeBefore);
-			for (vector<int>::iterator sortedIt = vectorToSort.begin(); sortedIt != vectorToSort.end(); sortedIt++) {
-				vector<int>::iterator next = sortedIt + 1;
-				if (next != vectorToSort.end()) {
-					if (params.ascending) {
-						if (*next < *sortedIt) {
-							successful = false;
-							break;
+				params.gapType = *gapIt;
+				int memBefore = MemoryTracker::get_current_memory();
+				int timeBefore = clock();
+				sort->sort(vectorToSort, params);
+				int timeAfter = clock();
+
+				memTaken.push_back(MemoryTracker::get_saved_memory() - memBefore);
+				timeTaken.push_back(timeAfter - timeBefore);
+				for (vector<int>::iterator sortedIt = vectorToSort.begin(); sortedIt != vectorToSort.end(); sortedIt++) {
+					vector<int>::iterator next = sortedIt + 1;
+					if (next != vectorToSort.end()) {
+						if (params.ascending) {
+							if (*next < *sortedIt) {
+								successful = false;
+								break;
+							}
+						}
+						else {
+							if (*next > *sortedIt) {
+								successful = false;
+								break;
+							}
 						}
 					}
-					else {
-						if (*next > *sortedIt) {
-							successful = false;
-							break;
-						}
-					}
 				}
 			}
+
+			int timeTotal = 0;
+			int timeIterations = 0;
+			for (vector<int>::iterator avgIt = timeTaken.begin(); avgIt != timeTaken.end(); avgIt++) {
+				timeIterations++;
+				timeTotal += *avgIt;
+			}
+			int timeAvg = timeTotal / timeIterations;
+			avgTimeForN[*n] = timeAvg;
+
+			if (params.logMemory) {
+				int memTotal = 0;
+				int memIterations = 0;
+				for (vector<int>::iterator avgIt = memTaken.begin(); avgIt != memTaken.end(); avgIt++) {
+					memIterations++;
+					memTotal += *avgIt;
+				}
+				int avgMem = memTotal / memIterations;
+				avgMemForN[*n] = avgMem;
+			}
+
 		}
-		int total = 0;
-		int iterations = 0;
-		for (vector<int>::iterator avgIt = timeTaken.begin(); avgIt != timeTaken.end(); avgIt++) {
-			iterations++;
-			total += *avgIt;
+		if (successful) {
+			ExperimentIO io;
+			string append = "";
+			if (params.gapTypeVector.begin() != params.gapTypeVector.end()) {
+				ostringstream appStream;
+				appStream << "_gap" << *gapIt;
+				append = appStream.str();
+			}
+			io.save_results(avgTimeForN, avgMemForN, logName+append);
 		}
-		int avg = total / iterations;
-		avgTimeForN[*n] = avg;
 	}
 	delete sort;
-	if (successful) {
-		ExperimentIO io;
-		io.save_results(avgTimeForN, logName);
-	}
 	return successful;
 }

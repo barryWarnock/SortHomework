@@ -9,4 +9,6 @@ ExpParams::ExpParams() {
 	gapVector.push_back(1);
 	nVector.push_back(10000);
 	gapType = SHELL_GAP;
+	gapTypeVector.push_back(SHELL_GAP);
+	logMemory = false;
 }
