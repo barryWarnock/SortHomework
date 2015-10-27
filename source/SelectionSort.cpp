@@ -1,4 +1,5 @@
 #include "../headers/SelectionSort.h"
+#include "../headers/MemoryTracker.h"
 #include <algorithm>
 
 void SelectionSort::sort(vector<int>& vectorToSort, SortParams params)
@@ -14,4 +15,5 @@ void SelectionSort::sort(vector<int>& vectorToSort, SortParams params)
 		std::swap(vectorToSort[nextPosition], vectorToSort[minElement]);
 		nextPosition++;
 	}
+	MemoryTracker::save_memory();
 }

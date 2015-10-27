@@ -2,33 +2,102 @@
 #include <cstdlib>
 #include <time.h>
 #include <vector>
+#include <string>
 #include "../headers/SortParams.h"
 #include "../headers/UserSortState.h"
+#include "../headers/MemoryTracker.h"
 #include <iostream>
 using namespace std;
 
 void UserSortState::activate() {
-	system("CLS");
-	vector<int> a;
 	SortWrapper sortFascade;
 	srand(time(NULL));
-	int num = 1;
-	while (num > 0) {
-		cout << "\n\n\nenter number of elements to sort (enter a number < 1 to quit): ";
-		cin >> num;
-		a.clear();
-		for (int i = 0; i < num; i++) {
-			a.push_back(rand() % num + 1);
+	
+	bool exit = false;
+	while (!exit) {
+		string input = "";
+		system("CLS");
+		cout << "[run] run a sort" << endl;
+		cout << "[back] return to main screen" << endl;
+		cout << "please enter your desired option: ";
+		cin >> input;
+		if (input == "back") {
+			exit = true;
 		}
-		cout << "Generated Numbers, sorting ..." << endl;
+		else if (input == "run") {
+			int n = 0;
+			cout << "how many elements would you like to sort: ";
+			cin >> n;
+			vector<int> vectorToSort;
+			for (int i = 0; i < n; i++) {
+				vectorToSort.push_back(rand() % RAND_MAX);
+			}
+			
+			string ascendingInput = "";
+			while (ascendingInput != "asc" && ascendingInput != "des") {
+				cout << "[asc]ending or [des]cending: ";
+				cin >> ascendingInput;
+			}
+			bool ascending = (ascendingInput == "asc");
+			
+			string typeInput = "";
+			while (typeInput != "sel" && typeInput != "ins" && typeInput != "she") {
+				cout << "which type of sort?" << endl;
+				cout << "[sel]ection, [ins]ertion, or [she]ll: ";
+				cin >> typeInput;
+			}
+			SortType sortType;
+			if (typeInput == "sel") {
+				sortType = SELECTION;
+			}
+			else if (typeInput == "ins") {
+				sortType = INSERTION;
+			}
+			else if (typeInput == "she") {
+				sortType = SHELL;
+			}
 
-		SortParams parameters;
-		parameters.ascending = false;
-		parameters.sortType = SHELL;
-		sortFascade.sort(a, parameters);
-		for (int i = 0; i < num && i < 200; i++) {
-			cout << a[i] << " ";
+			SortParams params;
+			params.ascending = ascending;
+			params.sortType = sortType;
+			cout << "running sort, depending on how many elements you chose this may take some time" << endl;
+
+			int memBefore = MemoryTracker::get_current_memory();
+			cout << "before: " << memBefore << endl;
+			cout << "saved: " << MemoryTracker::get_saved_memory() << endl;
+			int ticksBefore = clock();
+			sortFascade.sort(vectorToSort, params);
+			int ticksAfter = clock();
+			cout << "saved: " << MemoryTracker::get_saved_memory() << endl;
+			int ticksElapsed = ticksAfter - ticksBefore;
+			int memUsed = MemoryTracker::get_saved_memory() - memBefore;
+
+			bool success = true;
+			for (vector<int>::iterator sortedIt = vectorToSort.begin(); sortedIt != vectorToSort.end(); sortedIt++) {
+				vector<int>::iterator next = sortedIt + 1;
+				if (next != vectorToSort.end()) {
+					if (params.ascending) {
+						if (*next < *sortedIt) {
+							success = false;
+							break;
+						}
+					}
+					else {
+						if (*next > *sortedIt) {
+							success = false;
+							break;
+						}
+					}
+				}
+			}
+
+			string successString = (success) ? ("successfull") : ("not successfull");
+			cout << "the sort was " << successString << ", took " << ticksElapsed << " ticks to complete" << " and used " << memUsed << " bytes" << endl;
+			system("PAUSE");
+		}
+		else {
+			cout << "\"" + input + "\"" << " is not recognized as a valid input" << endl;
+			system("PAUSE");
 		}
 	}
-	system("PAUSE");
 }

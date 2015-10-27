@@ -1,6 +1,5 @@
 #include "../headers/InsertionSort.h"
-#include <iostream>
-using namespace std;
+#include "../headers/MemoryTracker.h"
 
 void InsertionSort::sort(vector<int> &vectorToSort, SortParams params)
 {
@@ -13,4 +12,5 @@ void InsertionSort::sort(vector<int> &vectorToSort, SortParams params)
 		}
 		vectorToSort[j+1] = val;
 	}
+	MemoryTracker::save_memory();
 }

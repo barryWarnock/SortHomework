@@ -2,9 +2,9 @@
 #include <vector>
 using namespace std;
 enum SortType {
-	SELECTION,
-	INSERTION,
-	SHELL,
+	SELECTION = 1,
+	INSERTION = 2,
+	SHELL = 3,
 };
 
 /**
@@ -13,10 +13,10 @@ https://en.wikipedia.org/wiki/Shellsort#Gap_sequences
 */
 enum GapType
 {
-	SHELL_GAP,
-	HIBBARD_GAP,
-	LAZARUS_GAP,
-	CUSTOM
+	SHELL_GAP = 1,
+	HIBBARD_GAP = 2,
+	LAZARUS_GAP = 3,
+	CUSTOM = 4
 };
 
 //I made SortParam a struct with no setters/getters

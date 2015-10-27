@@ -1,5 +1,6 @@
 #include "../headers/ShellSort.h"
 #include "../headers/InsertionSort.h"
+#include "../headers/MemoryTracker.h"
 #include <iostream>
 
 vector<int> ShellSort::generate_shell_gaps(int maxGap) {
@@ -67,4 +68,5 @@ void ShellSort::sort(vector<int> &vectorToSort, SortParams params) {
 			vectorToSort[j + gap] = val;
 		}
 	}
+	MemoryTracker::save_memory();
 }
