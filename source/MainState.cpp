@@ -1,5 +1,7 @@
 #include "../headers/MainState.h"
 #include <iostream>
+#include <cstdlib>
+using namespace std;
 
 void MainState::activate() {
 	bool exit = false;

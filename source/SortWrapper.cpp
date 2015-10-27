@@ -3,6 +3,7 @@
 #include "../headers/InsertionSort.h"
 #include "../headers/SelectionSort.h"
 #include "../headers/ShellSort.h"
+#include <cstdlib>
 
 #include "../headers/MemoryTracker.h"
 #include <iostream>
