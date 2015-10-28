@@ -2,10 +2,11 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+using namespace std;
 
 ExpParams ExperimentIO::load_experiment(string path) {
 	ifstream fileIn;
-	fileIn.open(path);
+	fileIn.open(path.c_str());
 	if (!fileIn.is_open()) {
 		throw exception();
 	}
@@ -34,7 +35,7 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	for (int i = nStartNum; i <= nStopNum; i += nIncrementNum) {
 		nVector.push_back(i);
 	}
-	
+
 	GenerationMethod genMethod;
 	if (generationMethod == "RANDOM") {
 		genMethod = RANDOM;
@@ -48,14 +49,14 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	else if (generationMethod == "RANDOM_IN_RANGE") {
 		genMethod = RANDOM_IN_RANGE;
 	}
-	
+
 	int minNum, maxNum;
 	istringstream(rangeMin) >> minNum;
 	istringstream(rangeMax) >> maxNum;
-	
+
 	bool isAscending;
 	istringstream(ascending) >> isAscending;
-	
+
 	bool isLogMemory;
 	istringstream(logMemory) >> isLogMemory;
 
@@ -70,7 +71,7 @@ ExpParams ExperimentIO::load_experiment(string path) {
 		selectedSortType = SHELL;
 	}
 
-	
+
 	if (gapType == "") {
 		gapVector.push_back(SHELL_GAP);
 	}
@@ -116,7 +117,8 @@ ExpParams ExperimentIO::load_experiment(string path) {
 void ExperimentIO::save_results(map<int, int> averageTimes, map<int, int> averageMems, string filename) {
 	bool logMemory = (averageMems.begin() != averageMems.end());
 	ofstream fileOut;
-	fileOut.open("experiment_logs/"+filename+".csv");
+	string path = "experiment_logs/"+filename+".csv";
+	fileOut.open(path.c_str());
 	string header = (logMemory) ? ("n,ticks,memory (bytes)") : ("n,ticks");
 	fileOut << header << endl;
 	for (map<int, int>::iterator it = averageTimes.begin(); it != averageTimes.end(); it++) {

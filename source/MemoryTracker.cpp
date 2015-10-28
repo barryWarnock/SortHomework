@@ -1,5 +1,4 @@
 #include "../headers/MemoryTracker.h"
-#include <time.h>
 PROCESS_MEMORY_COUNTERS MemoryTracker::memStruct;
 int MemoryTracker::loggedMemory = 0;
 
