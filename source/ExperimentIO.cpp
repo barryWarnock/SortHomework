@@ -119,7 +119,7 @@ void ExperimentIO::save_results(map<int, int> averageTimes, map<int, int> averag
 	ofstream fileOut;
 	string path = "experiment_logs/"+filename+".csv";
 	fileOut.open(path.c_str());
-	string header = (logMemory) ? ("n,ticks,memory (bytes)") : ("n,ticks");
+	string header = (logMemory) ? ("n,time (ms),memory (bytes)") : ("n,time (ms)");
 	fileOut << header << endl;
 	for (map<int, int>::iterator it = averageTimes.begin(); it != averageTimes.end(); it++) {
 		fileOut << it->first << "," << it->second;

@@ -93,7 +93,7 @@ bool Experiment::runExperiment(ExpParams params, string logName) {
 				timeTotal += *avgIt;
 			}
 			int timeAvg = timeTotal / timeIterations;
-			avgTimeForN[*n] = timeAvg;
+			avgTimeForN[*n] = (timeAvg/(CLOCKS_PER_SEC/1000));
 
 			if (params.logMemory) {
 				int memTotal = 0;

@@ -5,8 +5,8 @@ using namespace std;
 class Sort {
 protected:
 	/**
-	if ascending compare functions as >, false otherwise
-	if decending compare functions as <, false otherwise
+	if ascending compare functions as >
+	if descending compare functions as <
 	*/
 	bool compare(int first, int second, bool ascending);
 public:

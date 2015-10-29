@@ -66,7 +66,7 @@ void UserSortState::activate() {
 			int ticksBefore = clock();
 			sortFascade.sort(vectorToSort, params);
 			int ticksAfter = clock();
-			int ticksElapsed = ticksAfter - ticksBefore;
+			int timeElapsed = (ticksAfter - ticksBefore)/(CLOCKS_PER_SEC/1000);
 			int memUsed = MemoryTracker::get_saved_memory() - memBefore;
 
 			bool success = true;
@@ -89,7 +89,7 @@ void UserSortState::activate() {
 			}
 
 			string successString = (success) ? ("successfull") : ("not successfull");
-			cout << "the sort was " << successString << ", took " << ticksElapsed << " ticks to complete" << " and used " << memUsed << " bytes" << endl;
+			cout << "the sort was " << successString << ", took " << timeElapsed << "ms to complete" << " and used " << memUsed << " bytes" << endl;
 			system("PAUSE");
 		}
 		else {
