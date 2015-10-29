@@ -12,7 +12,7 @@ using namespace std;
 void UserSortState::activate() {
 	SortWrapper sortFascade;
 	srand(time(NULL));
-	
+
 	bool exit = false;
 	while (!exit) {
 		string input = "";
@@ -32,14 +32,14 @@ void UserSortState::activate() {
 			for (int i = 0; i < n; i++) {
 				vectorToSort.push_back(rand() % RAND_MAX);
 			}
-			
+
 			string ascendingInput = "";
 			while (ascendingInput != "asc" && ascendingInput != "des") {
 				cout << "[asc]ending or [des]cending: ";
 				cin >> ascendingInput;
 			}
 			bool ascending = (ascendingInput == "asc");
-			
+
 			string typeInput = "";
 			while (typeInput != "sel" && typeInput != "ins" && typeInput != "she") {
 				cout << "which type of sort?" << endl;
@@ -63,12 +63,9 @@ void UserSortState::activate() {
 			cout << "running sort, depending on how many elements you chose this may take some time" << endl;
 
 			int memBefore = MemoryTracker::get_current_memory();
-			cout << "before: " << memBefore << endl;
-			cout << "saved: " << MemoryTracker::get_saved_memory() << endl;
 			int ticksBefore = clock();
 			sortFascade.sort(vectorToSort, params);
 			int ticksAfter = clock();
-			cout << "saved: " << MemoryTracker::get_saved_memory() << endl;
 			int ticksElapsed = ticksAfter - ticksBefore;
 			int memUsed = MemoryTracker::get_saved_memory() - memBefore;
 

@@ -84,16 +84,6 @@ void RunExperimentsState::activate() {
                 else {
                     cout << "\""+input+"\"" << " is not recognized as valid input" << endl;;
                 }
-			/*Experiment exp;
-			ExpParams params;
-			ExperimentIO io;
-			try {
-			params = io.load_experiment("experiments/experiment10.txt");
-			exp.runExperiment(params, "csvTest");\
-			}
-			catch (exception e) {
-			cout << "ERROR";
-			}*/
 			system("PAUSE");
 		}
 	}

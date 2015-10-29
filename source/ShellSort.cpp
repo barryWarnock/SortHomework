@@ -1,41 +1,54 @@
 #include "../headers/ShellSort.h"
-#include "../headers/InsertionSort.h"
 #include "../headers/MemoryTracker.h"
 #include <iostream>
+#include <math.h>
 
-vector<int> ShellSort::generate_shell_gaps(int maxGap) {
+vector<int> ShellSort::generate_shell_gaps(int n) {
 	vector<int> gaps;
+	int k = 1;
+	int nextGap = 5;
+	while (nextGap > 1) {
+        nextGap = n/(pow(2, k));
+        k++;
+        if (nextGap > 1) {
+            gaps.push_back(nextGap);
+        }
+	}
 	gaps.push_back(1);
-	gaps.push_back(5);
-	gaps.push_back(16);
+	return gaps;
+}
+
+vector<int> ShellSort::generate_hibbard_gaps(int n) {
+	vector<int> gaps;
+	int k = 1;
+	int nextGap = 1;
+	while (nextGap < n) {
+        nextGap = (pow(2, k) -1);
+        k++;
+        if (nextGap < n) {
+            gaps.push_back(nextGap);
+        }
+	}
 	SortParams params;
 	params.ascending = false;
-	InsertionSort gapSort;
+	//we can use shell sort here because the default gap sequence is SHELL_GAP
+	ShellSort gapSort;
 	gapSort.sort(gaps, params);
 	return gaps;
 }
 
-vector<int> ShellSort::generate_hibbard_gaps(int maxGap) {
+vector<int> ShellSort::generate_lazarus_gaps(int n) {
 	vector<int> gaps;
-	gaps.push_back(1);
-	gaps.push_back(5);
-	gaps.push_back(16);
-	SortParams params;
-	params.ascending = false;
-	InsertionSort gapSort;
-	gapSort.sort(gaps, params);
-	return gaps;
-}
-
-vector<int> ShellSort::generate_lazarus_gaps(int maxGap) {
-	vector<int> gaps;
-	gaps.push_back(1);
-	gaps.push_back(5);
-	gaps.push_back(16);
-	SortParams params;
-	params.ascending = false;
-	InsertionSort gapSort;
-	gapSort.sort(gaps, params);
+	int k = 1;
+    int nextGap = 2;
+    while (nextGap > 1) {
+        nextGap = (2*(n/pow(2, k+1))) + 1;
+        k++;
+        if (nextGap > 1) {
+            gaps.push_back(nextGap);
+        }
+    }
+    gaps.push_back(1);
 	return gaps;
 }
 
@@ -68,5 +81,6 @@ void ShellSort::sort(vector<int> &vectorToSort, SortParams params) {
 			vectorToSort[j + gap] = val;
 		}
 	}
+
 	MemoryTracker::save_memory();
 }

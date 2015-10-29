@@ -110,7 +110,7 @@ bool Experiment::runExperiment(ExpParams params, string logName) {
 		if (successful) {
 			ExperimentIO io;
 			string append = "";
-			if (params.gapTypeVector.begin() != params.gapTypeVector.end()) {
+			if (params.gapTypeVector.size() > 1) {
 				ostringstream appStream;
 				appStream << "_gap" << *gapIt;
 				append = appStream.str();
