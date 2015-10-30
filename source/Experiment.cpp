@@ -27,9 +27,9 @@ bool Experiment::runExperiment(ExpParams params, string logName) {
 	}
 	if (sort == NULL) return false;
 	//the key is the n and the value is the number of ms the sort takes on avg for than number of elements
+	bool successful = true; //if a sort fails this is set to false;
 	map<int, int> avgTimeForN;
 	map<int, int> avgMemForN;
-	bool successful = true; //if a sort fails this is set to false;
 	for (vector<GapType>::iterator gapIt = params.gapTypeVector.begin(); gapIt != params.gapTypeVector.end(); gapIt++) {
 		for (vector<int>::iterator n = params.nVector.begin(); n != params.nVector.end(); n++) {
 			vector<int> timeTaken;

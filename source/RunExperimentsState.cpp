@@ -42,7 +42,7 @@ void RunExperimentsState::activate() {
                 ExpParams params;
                 ExperimentIO io;
                 if (input == "all") {
-                    cout << "please chose a base name for the csv files, no spaces: ";
+                    cout << "please choose a base name for the csv files, no spaces: ";
                     string logName;
                     cin >> logName;
                     for (vector<string>::iterator expIt = experiments.begin(); expIt != experiments.end(); expIt++) {

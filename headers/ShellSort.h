@@ -1,10 +1,12 @@
 #pragma once
 #include "Sort.h"
+#include "ShellSortTests.h"
 #include <vector>
 using namespace std;
 
 class ShellSort: public Sort
 {
+friend class ShellSortTests;
 protected:
 	vector<int> generate_shell_gaps(int maxGap);
 	vector<int> generate_hibbard_gaps(int maxGap);
