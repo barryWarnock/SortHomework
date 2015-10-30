@@ -21,9 +21,13 @@ enum GapType
 
 //I made SortParam a struct with no setters/getters
 struct SortParams {
+	//the type of sort to use
 	SortType sortType;
+	//true if the vector should be sorted in ascending order
 	bool ascending;
+	//a list of gaps to use if gapType is CUSTOM and sortType is SHELL
 	vector<int> gapVector;
+	//the function to use to generate gaps or CUSTOM to use your own gap vector
 	GapType gapType;
 	//sets all values to values that will "work" with sort functions
 	SortParams();

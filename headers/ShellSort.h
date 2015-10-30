@@ -8,6 +8,7 @@ class ShellSort: public Sort
 {
 friend class ShellSortTests;
 protected:
+	//all of these are from the wikipedia page on shell sort
 	vector<int> generate_shell_gaps(int maxGap);
 	vector<int> generate_hibbard_gaps(int maxGap);
 	vector<int> generate_lazarus_gaps(int maxGap);

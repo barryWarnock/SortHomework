@@ -6,28 +6,29 @@
 #include "../headers/SortParams.h"
 #include "../headers/UserSortState.h"
 #include "../headers/MemoryTracker.h"
-#include <iostream>
+#include "../headers/Console.h"
 using namespace std;
 
 void UserSortState::activate() {
+	Console* console = Console::getInstance();
 	SortWrapper sortFascade;
 	srand(time(NULL));
 
 	bool exit = false;
 	while (!exit) {
 		string input = "";
-		system("CLS");
-		cout << "[run] run a sort" << endl;
-		cout << "[back] return to main screen" << endl;
-		cout << "please enter your desired option: ";
-		cin >> input;
+		console->clear();
+		console->put("[run] run a sort");
+		console->put("[back] return to main screen");
+		console->put("please enter your desired option: ");
+		input = console->get();
 		if (input == "back") {
 			exit = true;
 		}
 		else if (input == "run") {
 			int n = 0;
-			cout << "how many elements would you like to sort: ";
-			cin >> n;
+			console->put("how many elements would you like to sort: ");
+			n = console->str_to_int(console->get());
 			vector<int> vectorToSort;
 			for (int i = 0; i < n; i++) {
 				vectorToSort.push_back(rand() % RAND_MAX);
@@ -35,16 +36,16 @@ void UserSortState::activate() {
 
 			string ascendingInput = "";
 			while (ascendingInput != "asc" && ascendingInput != "des") {
-				cout << "[asc]ending or [des]cending: ";
-				cin >> ascendingInput;
+				console->put("[asc]ending or [des]cending: ");
+				ascendingInput = console->get();
 			}
 			bool ascending = (ascendingInput == "asc");
 
 			string typeInput = "";
 			while (typeInput != "sel" && typeInput != "ins" && typeInput != "she") {
-				cout << "which type of sort?" << endl;
-				cout << "[sel]ection, [ins]ertion, or [she]ll: ";
-				cin >> typeInput;
+				console->put("which type of sort?");
+				console->put("[sel]ection, [ins]ertion, or [she]ll: ");
+				typeInput = console->get();
 			}
 			SortType sortType;
 			if (typeInput == "sel") {
@@ -60,7 +61,7 @@ void UserSortState::activate() {
 			SortParams params;
 			params.ascending = ascending;
 			params.sortType = sortType;
-			cout << "running sort, depending on how many elements you chose this may take some time" << endl;
+			console->put("running sort, depending on how many elements you chose this may take some time");
 
 			int memBefore = MemoryTracker::get_current_memory();
 			int ticksBefore = clock();
@@ -89,12 +90,12 @@ void UserSortState::activate() {
 			}
 
 			string successString = (success) ? ("successfull") : ("not successfull");
-			cout << "the sort was " << successString << ", took " << timeElapsed << "ms to complete" << " and used " << memUsed << " bytes" << endl;
-			system("PAUSE");
+			console->put("the sort was "+successString+", took "+console->int_to_str(timeElapsed)+"ms to complete and used "+console->int_to_str(memUsed)+" bytes");
+			console->pause();
 		}
 		else {
-			cout << "\"" + input + "\"" << " is not recognized as a valid input" << endl;
-			system("PAUSE");
+			console->put("\""+input+"\" is not recognized as a valid input");
+			console->pause();
 		}
 	}
 }

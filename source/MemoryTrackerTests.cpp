@@ -1,5 +1,6 @@
 #include "../headers/MemoryTrackerTests.h"
 #include <vector>
+using namespace std;
 
 bool MemoryTrackerTests::test_memory_increase() {
     //set up (record current memory and allocate some new memory)

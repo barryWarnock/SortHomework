@@ -1,27 +1,25 @@
 #include "../headers/MainState.h"
-#include <iostream>
-#include <cstdlib>
-using namespace std;
+#include "../headers/Console.h"
 
 void MainState::activate() {
+	Console *console = Console::getInstance();
 	bool exit = false;
 	while (!exit) {
-		system("CLS"); //I know system() is generally supposed to be avoided but I don't want to learn curses or print a ton of newlines so this will have to do
+		console->clear();
 		for (vector<string>::iterator it = optionTexts.begin(); it != optionTexts.end(); it++) {
-			cout << *it << endl;
+			console->put(*it);
 		}
-		cout << "[exit] to exit" << endl;
-		cout << "Please enter your desired option: ";
-		string input = "";
-		cin >> input;
+		console->put("[exit] to exit");
+		console->put("Please enter your desired option: ");
+		string input = console->get();
 		if (input == "exit") {
 			exit = true;
 		}
 		else {
 			map<string, UiState*>::iterator mapIterator = states.find(input);
 			if (mapIterator == states.end()) {
-				cout << "\"" + input + "\" is not recognized as a valid input" << endl;
-				system("PAUSE");
+				console->put("\"" + input + "\" is not recognized as a valid input");
+				console->pause();
 			}
 			else {
 				mapIterator->second->activate();
