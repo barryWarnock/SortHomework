@@ -42,9 +42,9 @@ void UserSortState::activate() {
 			bool ascending = (ascendingInput == "asc");
 
 			string typeInput = "";
-			while (typeInput != "sel" && typeInput != "ins" && typeInput != "she") {
+			while (typeInput != "sel" && typeInput != "ins" && typeInput != "she" && typeInput != "qui") {
 				console->put("which type of sort?");
-				console->put("[sel]ection, [ins]ertion, or [she]ll: ");
+				console->put("[sel]ection, [ins]ertion, [she]ll, or [qui]ck: ");
 				typeInput = console->get();
 			}
 			SortType sortType;
@@ -56,6 +56,9 @@ void UserSortState::activate() {
 			}
 			else if (typeInput == "she") {
 				sortType = SHELL;
+			}
+			else if (typeInput == "qui") {
+				sortType = QUICK;
 			}
 
 			SortParams params;

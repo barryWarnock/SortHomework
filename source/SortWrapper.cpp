@@ -3,6 +3,7 @@
 #include "../headers/InsertionSort.h"
 #include "../headers/SelectionSort.h"
 #include "../headers/ShellSort.h"
+#include "../headers/QuickSort.h"
 #include <cstdlib>
 
 #include "../headers/MemoryTracker.h"
@@ -22,9 +23,13 @@ void SortWrapper::sort(vector<int> &vectorToSort, SortParams params) {
 	case SHELL:
 		selectedSort = new(ShellSort);
 		break;
+	case QUICK:
+		selectedSort = new(QuickSort);
+		break;
+	default:
+		selectedSort = new(QuickSort);
 	}
-	if (selectedSort != NULL) {
-		selectedSort->sort(vectorToSort, params);
-		delete selectedSort;
-	}
+
+	selectedSort->sort(vectorToSort, params);
+	delete selectedSort;
 }

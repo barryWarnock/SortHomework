@@ -5,6 +5,7 @@ enum SortType {
 	SELECTION = 1,
 	INSERTION = 2,
 	SHELL = 3,
+	QUICK = 4
 };
 
 /**
