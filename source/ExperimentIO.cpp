@@ -176,10 +176,7 @@ void ExperimentIO::save_results(map<string, vector<map<int, int>>> data, string 
 	}
 	for (int row = 0; table.size() > 0 && row < table[0].size(); row++) {
 		for (int i = 0; i < table.size(); i++) {
-			fileOut << table[i][row];
-			if (row < table[0].size() - 1) {
-				fileOut << ",";
-			}
+			fileOut << table[i][row]+",";
 		}
 		fileOut << endl;
 	}
