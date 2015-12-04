@@ -1,4 +1,5 @@
 #include "../headers/MergeSort.h"
+#include "../headers/MemoryTracker.h"
 
 void MergeSort::split(vector<int> &original, vector<int> &left, vector<int> &right) {
 	int i;
@@ -46,5 +47,6 @@ void MergeSort::sort(vector<int> &vectorToSort, SortParams params) {
 		sort(left, params);
 		sort(right, params);
 		merge(vectorToSort, left, right, params);
+		MemoryTracker::save_memory();
 	}
 }

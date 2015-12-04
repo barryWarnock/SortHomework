@@ -60,8 +60,8 @@ bool Experiment::run_iterations(ExpParams params, int n, int &avgTime, int &avgM
 		totalTime += time;
 		totalMemory += memory;
 	}
-	avgTime = totalTime / iterations;
-	avgMemory = (totalMemory / iterations) / (CLOCKS_PER_SEC/1000);
+	avgTime = (totalTime / iterations) / (CLOCKS_PER_SEC / 1000);
+	avgMemory = (totalMemory / iterations);
 	return success;
 }
 
@@ -143,9 +143,6 @@ bool Experiment::runExperiment(ExpParams params, string logName) {
 			break;
 			case SELECTION:
 				key = "selection";
-			break;
-			case SHELL:
-				key = "shell";
 			break;
 			case QUICK:
 				key = "quick";

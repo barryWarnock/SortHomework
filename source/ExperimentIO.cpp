@@ -73,6 +73,7 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	string charBuffer = "";
 	for (int i = 0; i < sortType.size(); i++) {
 		if (sortType[i] == ',' || i == sortType.size() - 1) {
+			if (i == sortType.size() - 1) charBuffer += sortType[i];
 			SortType selectedSortType;
 			if (charBuffer == "INSERTION") {
 				selectedSortType = INSERTION;
@@ -153,18 +154,34 @@ void ExperimentIO::save_results(map<string, vector<map<int, int>>> data, string 
 
 	string path = "experiment_logs/"+filename+".csv";
 	fileOut.open(path.c_str());
-	string header = "n";
+	string header = "";
 	for (map<string, vector<map<int, int>>>::iterator key = data.begin(); key != data.end(); key++) {
-		header += ","+key->first + " time (ms), " + key->first + " memory (bytes)";
+		header += "n,"+key->first + " time (ms), " + key->first + " memory (bytes),";
 	}
 	fileOut << header;
 	fileOut << endl;
-	int rows = data.begin()->second.size();
-	for (int i = 0; i < rows; i++) {
-		fileOut << data.begin()->second[0][i];
-		for (map<string, vector<map<int, int>>>::iterator key = data.begin(); key != data.end(); key++) {
-			
+	vector<vector<string>> table;
+	for (map<string, vector<map<int, int>>>::iterator key = data.begin(); key != data.end(); key++) {
+		map<int, int>::iterator rowTime = key->second[0].begin();
+		map<int, int>::iterator rowMem  = key->second[1].begin();
+
+		vector<string> rows;
+		//the time and memory maps have the same number of elements
+		while (rowTime != key->second[0].end()) {
+			rows.push_back(console->int_to_str(rowTime->first)+","+ console->int_to_str(rowTime->second)+","+ console->int_to_str(rowMem->second));
+			rowTime++;
+			rowMem++;
 		}
+		table.push_back(rows);
+	}
+	for (int row = 0; table.size() > 0 && row < table[0].size(); row++) {
+		for (int i = 0; i < table.size(); i++) {
+			fileOut << table[i][row];
+			if (row < table[0].size() - 1) {
+				fileOut << ",";
+			}
+		}
+		fileOut << endl;
 	}
 	fileOut.close();
 }

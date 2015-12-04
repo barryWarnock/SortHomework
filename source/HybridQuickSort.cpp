@@ -1,14 +1,17 @@
 #include "../headers/HybridQuickSort.h"
 #include "../headers/SortWrapper.h"
+#include "../headers/MemoryTracker.h"
 
 void HybridQuickSort::sort(vector<int> &vectorToSort, SortParams params) {
 	if (vectorToSort.size() > params.hybridThreshold) {
 		sort(vectorToSort, params, 0, vectorToSort.size() - 1);
+		MemoryTracker::save_memory();
 	}
 	else {
 		SortWrapper sortFascade;
 		params.sortType = INSERTION;
 		sortFascade.sort(vectorToSort, params);
+		MemoryTracker::save_memory();
 	}
 }
 
@@ -20,6 +23,7 @@ void HybridQuickSort::sort(vector<int> &vectorToSort, SortParams params, int beg
 
 		sort(vectorToSort, params, begining, i - 1);
 		sort(vectorToSort, params, i, end);
+		MemoryTracker::save_memory();
 	}
 	else {
 		vector<int> subVector;
@@ -34,5 +38,6 @@ void HybridQuickSort::sort(vector<int> &vectorToSort, SortParams params, int beg
 		for (int i = begining; i <= end; i++) {
 			vectorToSort[i] = subVector[0-begining+i];
 		}
+		MemoryTracker::save_memory();
 	}
 }
