@@ -1,4 +1,6 @@
 #pragma once
+#ifndef MEMORYTRACKER_H
+#define MEMORYTRACKER_H
 #include <windows.h>
 #include <psapi.h>
 
@@ -15,3 +17,4 @@ public:
 	//returns the current amount of memory being used by this program in bytes
 	static int get_current_memory();
 };
+#endif

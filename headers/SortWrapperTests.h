@@ -1,4 +1,6 @@
 #pragma once
+#ifndef SORTWRAPPERTESTS_H
+#define SORTWRAPPERTESTS_H
 #include "UnitTest.h"
 #include "SortWrapper.h"
 class SortWrapperTests : public UnitTest {
@@ -9,3 +11,4 @@ public:
 
 	virtual bool run_tests() override;
 };
+#endif

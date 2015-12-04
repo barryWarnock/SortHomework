@@ -1,4 +1,6 @@
 #pragma once
+#ifndef SORT_H
+#define SORT_H
 #include <vector>
 #include "../headers/SortParams.h"
 using namespace std;
@@ -13,3 +15,4 @@ public:
 	// takes a vector to sort and a SortParams object and sorts the vector according to the parameters
 	virtual void sort(vector<int> &vectorToSort, SortParams params) = 0;
 };
+#endif

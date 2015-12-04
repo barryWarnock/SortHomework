@@ -1,4 +1,6 @@
 #pragma once
+#ifndef SORTPARAMS_H
+#define SORTPARAMS_H
 #include <vector>
 using namespace std;
 enum SortType {
@@ -33,3 +35,4 @@ struct SortParams {
 	//sets all values to values that will "work" with sort functions
 	SortParams();
 };
+#endif

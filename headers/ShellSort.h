@@ -1,4 +1,6 @@
 #pragma once
+#ifndef SHELLSORT_H
+#define SHELLSORT_H
 #include "Sort.h"
 #include "ShellSortTests.h"
 #include <vector>
@@ -17,3 +19,4 @@ public:
 	virtual void sort(vector<int> &vectorToSort, SortParams params) override;
 };
 
+#endif

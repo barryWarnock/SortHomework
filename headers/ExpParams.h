@@ -1,4 +1,6 @@
 #pragma once
+#ifndef EXPPARAMS_H
+#define EXPPARAMS_H
 #include "SortParams.h"
 #include <vector>
 using namespace std;
@@ -27,3 +29,4 @@ struct ExpParams : public SortParams {
 	bool logMemory;
 	ExpParams();
 };
+#endif

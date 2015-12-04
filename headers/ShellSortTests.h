@@ -1,4 +1,6 @@
 #pragma once
+#ifndef SHELLSORTTEST_H
+#define SHELLSORTTEST_H
 #include "UnitTest.h"
 #include "ShellSort.h"
 class ShellSortTests : public UnitTest {
@@ -13,3 +15,4 @@ public:
     bool test_compare_descending();
     virtual bool run_tests() override;
 };
+#endif

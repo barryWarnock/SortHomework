@@ -1,4 +1,6 @@
 #pragma once
+#ifndef MAINSTATE_H
+#define MAINSTATE_H
 #include <map>
 #include <string>
 #include <vector>
@@ -16,3 +18,4 @@ public:
 	void add_option(string text, string input, UiState* newState);
 	~MainState();
 };
+#endif

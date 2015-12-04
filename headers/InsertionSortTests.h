@@ -1,4 +1,6 @@
 #pragma once
+#ifndef INSERTIONSORTTESTS_H
+#define INSERTIONSORTTESTS_H
 #include "UnitTest.h"
 #include "InsertionSort.h"
 class InsertionSortTests : public UnitTest {
@@ -9,3 +11,4 @@ public:
     bool test_compare_descending();
     virtual bool run_tests() override;
 };
+#endif

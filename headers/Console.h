@@ -1,4 +1,6 @@
 #pragma once
+#ifndef CONSOLE_H
+#define CONSOLE_H
 #include <string>
 using namespace std;
 
@@ -23,3 +25,4 @@ public:
 	//pauses the console until the user presses any key
 	void pause();
 };
+#endif

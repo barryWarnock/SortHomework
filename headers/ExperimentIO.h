@@ -1,4 +1,6 @@
 #pragma once
+#ifndef EXPERIMENTIO_H
+#define EXPERIMENTIO_H
 #include "ExpParams.h"
 #include <map>
 #include <string>
@@ -11,3 +13,4 @@ public:
 	//takes two maps, [n]->ms taken for sort, and [n]->memory taken by sort as well as the base name of the csv to log the results to
 	void save_results(map<int, int> averageTimes, map<int, int> averageMems, string filename);
 };
+#endif
