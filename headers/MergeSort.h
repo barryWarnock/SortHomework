@@ -4,7 +4,7 @@
 
 #include "Sort.h"
 class MergeSort : public Sort {
-	//friend class SelectionSortTests;
+	friend class MergeSortTests;
 protected:
 	void split(vector<int> &original, vector<int> &left, vector<int> &right);
 	void merge(vector<int> &mergeInto, vector<int> &left, vector<int> &right, SortParams params);
