@@ -19,31 +19,36 @@ int QuickSort::find_pivot(vector<int> &vectorToSort, int begining, int end) {
 	}
 }
 
+int QuickSort::partition(vector<int> &vectorToSort, int begining, int end, int pivot, SortParams params) {
+	int i = begining;
+	int j = end;
+
+	while (i <= j) {
+
+		while (compare(pivot, vectorToSort[i], params.ascending)) {
+			i++;
+		}
+
+		while (compare(vectorToSort[j], pivot, params.ascending)) {
+			j--;
+		}
+
+		if (i <= j) {
+			std::swap(vectorToSort[i], vectorToSort[j]);
+			i++;
+			j--;
+		}
+	}
+	return i;
+}
+
 void QuickSort::sort(vector<int> &vectorToSort, SortParams params, int begining, int end) {
 	if (begining < end) {
 		int pivot = find_pivot(vectorToSort, begining, end);
 
-		int i = begining;
-		int j = end;
+		int i = partition(vectorToSort, begining, end, pivot, params);
 
-		while (i <= j) {
-
-			while (compare(pivot, vectorToSort[i], params.ascending)) {
-				i++;
-			} 
-
-			while (compare(vectorToSort[j], pivot, params.ascending)) {
-				j--;
-			} 
-
-			if (i <= j) {
-				std::swap(vectorToSort[i], vectorToSort[j]);
-				i++;
-				j--;
-			}
-		}
-
-		sort(vectorToSort, params, begining, j);
+		sort(vectorToSort, params, begining, i-1);
 		sort(vectorToSort, params, i, end);
 	}
 	MemoryTracker::save_memory();

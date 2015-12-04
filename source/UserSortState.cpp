@@ -42,9 +42,9 @@ void UserSortState::activate() {
 			bool ascending = (ascendingInput == "asc");
 
 			string typeInput = "";
-			while (typeInput != "sel" && typeInput != "ins" && typeInput != "she" && typeInput != "qui" && typeInput != "mer" && typeInput != "hm") {
+			while (typeInput != "sel" && typeInput != "ins" && typeInput != "she" && typeInput != "qui" && typeInput != "mer" && typeInput != "hm" && typeInput != "hq") {
 				console->put("which type of sort?");
-				console->put("[sel]ection, [ins]ertion, [she]ll, [mer]ge, [qui]ck, or [hm]-hybrid merge: ");
+				console->put("[sel]ection, [ins]ertion, [she]ll, [mer]ge, [qui]ck, [hm]-hybrid merge, or [hq]-hybrid quick: ");
 				typeInput = console->get();
 			}
 			SortType sortType;
@@ -65,6 +65,9 @@ void UserSortState::activate() {
 			}
 			else if (typeInput == "hm") {
 				sortType = HYBRID_MERGE;
+			}
+			else if (typeInput == "hq") {
+				sortType = HYBRID_QUICK;
 			}
 
 			int hybridThreshold = 0;

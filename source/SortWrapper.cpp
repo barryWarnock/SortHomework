@@ -6,6 +6,7 @@
 #include "../headers/QuickSort.h"
 #include "../headers/MergeSort.h"
 #include "../headers/HybridMergeSort.h"
+#include "../headers/HybridQuickSort.h"
 #include <cstdlib>
 
 #include "../headers/MemoryTracker.h"
@@ -33,6 +34,9 @@ void SortWrapper::sort(vector<int> &vectorToSort, SortParams params) {
 		break;
 	case HYBRID_MERGE:
 		selectedSort = new(HybridMergeSort);
+		break;
+	case HYBRID_QUICK:
+		selectedSort = new(HybridQuickSort);
 		break;
 	default:
 		selectedSort = new(QuickSort);
