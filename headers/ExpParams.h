@@ -14,6 +14,7 @@ enum GenerationMethod {
 
 //the struct that describes an experiment
 struct ExpParams : public SortParams {
+	vector<SortType> sortTypeVector;
 	//a list of n's (sizes of arrays to run the experiment on)
 	vector<int> nVector;
 	//the method used to generate the array
@@ -27,6 +28,8 @@ struct ExpParams : public SortParams {
 	vector<GapType> gapTypeVector;
 	//I misread some experiments and so implemented the ability to toggle memory logging on and off
 	bool logMemory;
+	vector<int> thresholdVector;
 	ExpParams();
+	ExpParams(const ExpParams &other);
 };
 #endif

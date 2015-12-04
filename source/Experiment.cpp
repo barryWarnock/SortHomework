@@ -1,15 +1,69 @@
 #include "../headers/Experiment.h"
 #include "../headers/MemoryTracker.h"
 #include "../headers/SortWrapper.h"
-#include "../headers/Sort.h"
-#include "../headers/InsertionSort.h"
-#include "../headers/SelectionSort.h"
-#include "../headers/ShellSort.h"
+#include "../headers/SortWrapper.h"
 #include "../headers/ExperimentIO.h"
+#include "../headers/Console.h"
 #include <time.h>
 #include <map>
 #include <sstream>
 #include <iostream>
+
+bool Experiment::check_sort(vector<int> &sorted, bool ascending) {
+	bool successful = true;
+	for (vector<int>::iterator sortedIt = sorted.begin(); sortedIt != sorted.end(); sortedIt++) {
+		vector<int>::iterator next = sortedIt + 1;
+		if (next != sorted.end()) {
+			if (ascending) {
+				if (*next < *sortedIt) {
+					successful = false;
+					break;
+				}
+			}
+			else {
+				if (*next > *sortedIt) {
+					successful = false;
+					break;
+				}
+			}
+		}
+	}
+	return successful;
+}
+
+bool Experiment::run_iteration(ExpParams params, int n, int &time, int &memory) {
+	vector<int> vectorToSort = generate_vector(params, n);
+	
+	SortWrapper sortFascade;
+	
+	int memBefore = MemoryTracker::get_current_memory();
+	int timeBefore = clock();
+	sortFascade.sort(vectorToSort, params);
+	int timeAfter = clock();
+	time = timeAfter - timeBefore;
+	memory = MemoryTracker::get_saved_memory() - memBefore;
+
+	return check_sort(vectorToSort, params.ascending);
+}
+
+bool Experiment::run_iterations(ExpParams params, int n, int &avgTime, int &avgMemory, int iterations) {
+	Console* console = Console::getInstance();
+	console->put("running a sort with size "+console->int_to_str(n));
+
+	int totalTime = 0;
+	int totalMemory = 0;
+	bool success;
+	for (int i = 0; i < iterations; i++) {
+		int time, memory;
+		success = run_iteration(params, n, time, memory);
+		if (success == false) return false;
+		totalTime += time;
+		totalMemory += memory;
+	}
+	avgTime = totalTime / iterations;
+	avgMemory = (totalMemory / iterations) / (CLOCKS_PER_SEC/1000);
+	return success;
+}
 
 vector<int> Experiment::generate_vector(ExpParams params, int size) {
 	vector<int> vectorToSort;
@@ -41,84 +95,79 @@ vector<int> Experiment::generate_vector(ExpParams params, int size) {
 
 bool Experiment::runExperiment(ExpParams params, string logName) {
 	srand(time(NULL));
-	Sort* sort = NULL;
-	switch (params.sortType) {
-	case SELECTION:
-		sort = new(SelectionSort);
-		break;
-	case INSERTION:
-		sort = new(InsertionSort);
-		break;
-	case SHELL:
-		sort = new(ShellSort);
-		break;
-	}
-	if (sort == NULL) return false;
-	//the key is the n and the value is the number of ms the sort takes on avg for than number of elements
-	bool successful = true; //if a sort fails this is set to false;
-	map<int, int> avgTimeForN;
-	map<int, int> avgMemForN;
-	for (vector<GapType>::iterator gapIt = params.gapTypeVector.begin(); gapIt != params.gapTypeVector.end(); gapIt++) {
-		for (vector<int>::iterator n = params.nVector.begin(); n != params.nVector.end(); n++) {
-			vector<int> timeTaken;
-			vector<int> memTaken;
-			for (int i = 0; i < 5; i++) {
-				vector<int> vectorToSort = generate_vector(params, *n);
-				params.gapType = *gapIt;
-				int memBefore = MemoryTracker::get_current_memory();
-				int timeBefore = clock();
-				sort->sort(vectorToSort, params);
-				int timeAfter = clock();
+	bool success = true;
 
-				memTaken.push_back(MemoryTracker::get_saved_memory() - memBefore);
-				timeTaken.push_back(timeAfter - timeBefore);
-				for (vector<int>::iterator sortedIt = vectorToSort.begin(); sortedIt != vectorToSort.end(); sortedIt++) {
-					vector<int>::iterator next = sortedIt + 1;
-					if (next != vectorToSort.end()) {
-						if (params.ascending) {
-							if (*next < *sortedIt) {
-								successful = false;
-								break;
-							}
-						}
-						else {
-							if (*next > *sortedIt) {
-								successful = false;
-								break;
-							}
-						}
-					}
+	Console* console = Console::getInstance();
+
+	//maps strings, (the text to prepend to colums) to a vector of maps [[n]->time, [n]->memory]
+	map<string, vector<map<int, int>>> data;
+	for (vector<SortType>::iterator sortType = params.sortTypeVector.begin(); sortType != params.sortTypeVector.end(); sortType++) {
+		params.sortType = *sortType;
+		if (*sortType == SHELL) {
+			for (vector<GapType>::iterator gapType = params.gapTypeVector.begin(); gapType != params.gapTypeVector.end(); gapType++) {
+				string key;
+				map<int, int> avgTime, avgMemory;
+				params.gapType = *gapType;
+				key = "shell gap-type "+ console->int_to_str(*gapType);
+				for (vector<int>::iterator n = params.nVector.begin(); n != params.nVector.end(); n++) {
+					int time, memory;
+					success = success & run_iterations(params, *n, time, memory, 5);
+					avgTime[*n] = time;
+					avgMemory[*n] = memory;
 				}
+				data[key] = { avgTime, avgMemory };
 			}
-
-			int timeTotal = 0;
-			for (vector<int>::iterator avgIt = timeTaken.begin(); avgIt != timeTaken.end(); avgIt++) {
-				timeTotal += *avgIt;
-			}
-			int timeAvg = timeTotal / timeTaken.size();
-			avgTimeForN[*n] = (timeAvg/(CLOCKS_PER_SEC/1000));
-
-			if (params.logMemory) {
-				int memTotal = 0;
-				for (vector<int>::iterator avgIt = memTaken.begin(); avgIt != memTaken.end(); avgIt++) {
-					memTotal += *avgIt;
+		}
+		else if (*sortType == HYBRID_MERGE || *sortType == HYBRID_QUICK) {
+			for (vector<int>::iterator threshold = params.thresholdVector.begin(); threshold != params.thresholdVector.end(); threshold++) {
+				string key;
+				map<int, int> avgTime, avgMemory;
+				params.hybridThreshold = *threshold;
+				if (*sortType == HYBRID_MERGE) key = "hybrid merge sort threshold " + console->int_to_str(*threshold);
+				else key = "hybrid quicksort threshold " + console->int_to_str(*threshold);
+				for (vector<int>::iterator n = params.nVector.begin(); n != params.nVector.end(); n++) {
+					int time, memory;
+					success = success & run_iterations(params, *n, time, memory, 5);
+					avgTime[*n] = time;
+					avgMemory[*n] = memory;
 				}
-				int avgMem = memTotal / memTaken.size();
-				avgMemForN[*n] = avgMem;
+				data[key] = { avgTime, avgMemory };
 			}
-
 		}
-		if (successful) {
-			ExperimentIO io;
-			string append = "";
-			if (params.gapTypeVector.size() > 1) {
-				ostringstream appStream;
-				appStream << "_gap" << *gapIt;
-				append = appStream.str();
+		else {
+			string key;
+			map<int, int> avgTime, avgMemory;
+			switch (*sortType) {
+			case INSERTION:
+				key = "insertion";
+			break;
+			case SELECTION:
+				key = "selection";
+			break;
+			case SHELL:
+				key = "shell";
+			break;
+			case QUICK:
+				key = "quick";
+			break;
+			case MERGE:
+				key = "merge";
+			break;
+			default:
+				key = "";
+			break;
 			}
-			io.save_results(avgTimeForN, avgMemForN, logName+append);
+			for (vector<int>::iterator n = params.nVector.begin(); n != params.nVector.end(); n++) {
+				int time, memory;
+				success = success & run_iterations(params, *n, time, memory, 5);
+				avgTime[*n] = time;
+				avgMemory[*n] = memory;
+			}
+			data[key] = { avgTime, avgMemory };
 		}
+		if (success == false) return false;
 	}
-	delete sort;
-	return successful;
+	ExperimentIO dataLogger;
+	dataLogger.save_results(data, logName);
+	return success;
 }

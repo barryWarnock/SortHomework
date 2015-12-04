@@ -11,6 +11,6 @@ public:
 	//takes the name of an experiment in the experiments directory and turns it into an ExpParams parameter struct
 	ExpParams load_experiment(string path);
 	//takes two maps, [n]->ms taken for sort, and [n]->memory taken by sort as well as the base name of the csv to log the results to
-	void save_results(map<int, int> averageTimes, map<int, int> averageMems, string filename);
+	void save_results(map<string, vector<map<int,int>>> data, string filename);
 };
 #endif

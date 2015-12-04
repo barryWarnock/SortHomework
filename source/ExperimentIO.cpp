@@ -1,16 +1,18 @@
 #include "../headers/ExperimentIO.h"
+#include "../headers/Console.h"
 #include <fstream>
 #include <vector>
-#include <sstream>
 using namespace std;
 
 ExpParams ExperimentIO::load_experiment(string path) {
+	Console* console = Console::getInstance();
 	ifstream fileIn;
 	fileIn.open(path.c_str());
 	if (!fileIn.is_open()) {
 		throw exception();
 	}
-	string nStart, nIncrement, nStop, generationMethod, rangeMin, rangeMax, sortType, ascending, logMemory, gapType;
+	string nStart, nIncrement, nStop, generationMethod, rangeMin, rangeMax, sortType, ascending, logMemory, gapType, thresholds;
+	vector<int> thresholdVector;
 	rangeMin = "0";
 	rangeMax = "0";
 	vector<int> nVector;
@@ -27,11 +29,19 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	fileIn >> ascending;
 	fileIn >> logMemory;
 	fileIn >> gapType;
+	fileIn >> thresholds;
+	int thresholdsNum = console->str_to_int(thresholds);
+	for (int i = 0; i < thresholdsNum; i++) {
+		string temp;
+		fileIn >> temp;
+		thresholdVector.push_back(console->str_to_int(temp));
+	}
+
 	int nStartNum, nIncrementNum, nStopNum;
-	istringstream(nStart) >> nStartNum;
-	istringstream(nIncrement) >> nIncrementNum;
-	istringstream(nStop) >> nStopNum;
-	string numStr = "";
+	nStartNum = console->str_to_int(nStart);
+	nIncrementNum = console->str_to_int(nIncrement);
+	nStopNum = console->str_to_int(nStop);
+
 	for (int i = nStartNum; i <= nStopNum; i += nIncrementNum) {
 		nVector.push_back(i);
 	}
@@ -51,32 +61,54 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	}
 
 	int minNum, maxNum;
-	istringstream(rangeMin) >> minNum;
-	istringstream(rangeMax) >> maxNum;
+	minNum = console->str_to_int(rangeMin);
+	maxNum = console->str_to_int(rangeMax);
 
 	bool isAscending;
-	istringstream(ascending) >> isAscending;
+	isAscending = console->str_to_int(ascending);
 
 	bool isLogMemory;
-	istringstream(logMemory) >> isLogMemory;
-
-	SortType selectedSortType;
-	if (sortType == "INSERTION") {
-		selectedSortType = INSERTION;
+	isLogMemory = console->str_to_int(logMemory);
+	vector<SortType> sortTypeVector;
+	string charBuffer = "";
+	for (int i = 0; i < sortType.size(); i++) {
+		if (sortType[i] == ',' || i == sortType.size() - 1) {
+			SortType selectedSortType;
+			if (charBuffer == "INSERTION") {
+				selectedSortType = INSERTION;
+			}
+			else if (charBuffer == "SELECTION") {
+				selectedSortType = SELECTION;
+			}
+			else if (charBuffer == "SHELL") {
+				selectedSortType = SHELL;
+			}
+			else if (charBuffer == "QUICK") {
+				selectedSortType = QUICK;
+			}
+			else if (charBuffer == "HYBRID_QUICK") {
+				selectedSortType = HYBRID_QUICK;
+			}
+			else if (charBuffer == "MERGE") {
+				selectedSortType = MERGE;
+			}
+			else if (charBuffer == "HYBRID_MERGE") {
+				selectedSortType = HYBRID_MERGE;
+			}
+			sortTypeVector.push_back(selectedSortType);
+			charBuffer = "";
+		}
+		else if (sortType[i] != ' ') {
+			charBuffer += sortType[i];
+		}
 	}
-	else if (sortType == "SELECTION") {
-		selectedSortType = SELECTION;
-	}
-	else if (sortType == "SHELL") {
-		selectedSortType = SHELL;
-	}
 
 
-	if (gapType == "") {
+	if (gapType == "NOGAP") {
 		gapVector.push_back(SHELL_GAP);
 	}
 	else {
-		string charBuffer = "";
+		charBuffer = "";
 		for (int i = 0; i < gapType.size(); i++) {
 			//don't care about whitespace
 			if (gapType[i] != ' ') {
@@ -108,25 +140,31 @@ ExpParams ExperimentIO::load_experiment(string path) {
 	returnParams.rangeMax = maxNum;
 	returnParams.ascending = isAscending;
 	returnParams.logMemory = isLogMemory;
-	returnParams.sortType = selectedSortType;
+	returnParams.sortTypeVector = sortTypeVector;
 	returnParams.gapType = gapVector[0];
 	returnParams.gapTypeVector = gapVector;
+	returnParams.thresholdVector = thresholdVector;
 	return returnParams;
 }
 
-void ExperimentIO::save_results(map<int, int> averageTimes, map<int, int> averageMems, string filename) {
-	bool logMemory = (averageMems.begin() != averageMems.end());
+void ExperimentIO::save_results(map<string, vector<map<int, int>>> data, string filename) {
 	ofstream fileOut;
+	Console* console = Console::getInstance();
+
 	string path = "experiment_logs/"+filename+".csv";
 	fileOut.open(path.c_str());
-	string header = (logMemory) ? ("n,time (ms),memory (bytes)") : ("n,time (ms)");
-	fileOut << header << endl;
-	for (map<int, int>::iterator it = averageTimes.begin(); it != averageTimes.end(); it++) {
-		fileOut << it->first << "," << it->second;
-		if (logMemory) {
-			fileOut << "," << averageMems[it->first];
+	string header = "n";
+	for (map<string, vector<map<int, int>>>::iterator key = data.begin(); key != data.end(); key++) {
+		header += ","+key->first + " time (ms), " + key->first + " memory (bytes)";
+	}
+	fileOut << header;
+	fileOut << endl;
+	int rows = data.begin()->second.size();
+	for (int i = 0; i < rows; i++) {
+		fileOut << data.begin()->second[0][i];
+		for (map<string, vector<map<int, int>>>::iterator key = data.begin(); key != data.end(); key++) {
+			
 		}
-		fileOut << endl;
 	}
 	fileOut.close();
 }

@@ -38,5 +38,6 @@ struct SortParams {
 	int hybridThreshold;
 	//sets all values to values that will "work" with sort functions
 	SortParams();
+	SortParams(const SortParams &other);
 };
 #endif
