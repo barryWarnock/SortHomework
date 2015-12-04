@@ -4,4 +4,5 @@ SortParams::SortParams() {
 	ascending = true;
 	gapVector.push_back(1);
 	gapType = LAZARUS_GAP;
+	hybridThreshold = 16;
 }

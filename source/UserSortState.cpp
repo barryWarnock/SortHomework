@@ -42,9 +42,9 @@ void UserSortState::activate() {
 			bool ascending = (ascendingInput == "asc");
 
 			string typeInput = "";
-			while (typeInput != "sel" && typeInput != "ins" && typeInput != "she" && typeInput != "qui") {
+			while (typeInput != "sel" && typeInput != "ins" && typeInput != "she" && typeInput != "qui" && typeInput != "mer" && typeInput != "hm") {
 				console->put("which type of sort?");
-				console->put("[sel]ection, [ins]ertion, [she]ll, or [qui]ck: ");
+				console->put("[sel]ection, [ins]ertion, [she]ll, [mer]ge, [qui]ck, or [hm]-hybrid merge: ");
 				typeInput = console->get();
 			}
 			SortType sortType;
@@ -57,13 +57,26 @@ void UserSortState::activate() {
 			else if (typeInput == "she") {
 				sortType = SHELL;
 			}
+			else if (typeInput == "mer") {
+				sortType = MERGE;
+			}
 			else if (typeInput == "qui") {
 				sortType = QUICK;
+			}
+			else if (typeInput == "hm") {
+				sortType = HYBRID_MERGE;
+			}
+
+			int hybridThreshold = 0;
+			if (sortType == HYBRID_MERGE || sortType == HYBRID_QUICK) {
+				console->put("how large do you want the hybrid threshold to be: ");
+				hybridThreshold = console->str_to_int(console->get());
 			}
 
 			SortParams params;
 			params.ascending = ascending;
 			params.sortType = sortType;
+			params.hybridThreshold = hybridThreshold;
 			console->put("running sort, depending on how many elements you chose this may take some time");
 
 			int memBefore = MemoryTracker::get_current_memory();

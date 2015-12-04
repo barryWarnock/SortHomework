@@ -1,7 +1,7 @@
 #pragma once
 #ifndef QUICKSORT_H
 #define QUICKSORT_H
-#include "SelectionSortTests.h"
+
 #include "Sort.h"
 class QuickSort : public Sort {
 	//friend class SelectionSortTests;

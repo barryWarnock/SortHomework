@@ -11,6 +11,34 @@
 #include <sstream>
 #include <iostream>
 
+vector<int> Experiment::generate_vector(ExpParams params, int size) {
+	vector<int> vectorToSort;
+	switch (params.genMethod) {
+	default:
+	case RANDOM:
+		for (int j = 0; j < size; j++) {
+			vectorToSort.push_back(rand() % RAND_MAX);
+		}
+		break;
+	case SORTED:
+		for (int j = 0; j < size; j++) {
+			vectorToSort.push_back(j);
+		}
+		break;
+	case SORTED_REVERSE:
+		for (int j = size; j > 0; j--) {
+			vectorToSort.push_back(j);
+		}
+		break;
+	case RANDOM_IN_RANGE:
+		for (int j = 0; j < size; j++) {
+			vectorToSort.push_back((rand() % (params.rangeMax - params.rangeMin)) + params.rangeMin);
+		}
+		break;
+	}
+	return vectorToSort;
+}
+
 bool Experiment::runExperiment(ExpParams params, string logName) {
 	srand(time(NULL));
 	Sort* sort = NULL;
@@ -35,30 +63,7 @@ bool Experiment::runExperiment(ExpParams params, string logName) {
 			vector<int> timeTaken;
 			vector<int> memTaken;
 			for (int i = 0; i < 5; i++) {
-				vector<int> vectorToSort;
-				switch (params.genMethod) {
-				default:
-				case RANDOM:
-					for (int j = 0; j < *n; j++) {
-						vectorToSort.push_back(rand() % RAND_MAX);
-					}
-					break;
-				case SORTED:
-					for (int j = 0; j < *n; j++) {
-						vectorToSort.push_back(j);
-					}
-					break;
-				case SORTED_REVERSE:
-					for (int j = *n; j > 0; j--) {
-						vectorToSort.push_back(j);
-					}
-					break;
-				case RANDOM_IN_RANGE:
-					for (int j = 0; j < *n; j++) {
-						vectorToSort.push_back((rand() % (params.rangeMax - params.rangeMin)) + params.rangeMin);
-					}
-					break;
-				}
+				vector<int> vectorToSort = generate_vector(params, *n);
 				params.gapType = *gapIt;
 				int memBefore = MemoryTracker::get_current_memory();
 				int timeBefore = clock();
@@ -87,22 +92,18 @@ bool Experiment::runExperiment(ExpParams params, string logName) {
 			}
 
 			int timeTotal = 0;
-			int timeIterations = 0;
 			for (vector<int>::iterator avgIt = timeTaken.begin(); avgIt != timeTaken.end(); avgIt++) {
-				timeIterations++;
 				timeTotal += *avgIt;
 			}
-			int timeAvg = timeTotal / timeIterations;
+			int timeAvg = timeTotal / timeTaken.size();
 			avgTimeForN[*n] = (timeAvg/(CLOCKS_PER_SEC/1000));
 
 			if (params.logMemory) {
 				int memTotal = 0;
-				int memIterations = 0;
 				for (vector<int>::iterator avgIt = memTaken.begin(); avgIt != memTaken.end(); avgIt++) {
-					memIterations++;
 					memTotal += *avgIt;
 				}
-				int avgMem = memTotal / memIterations;
+				int avgMem = memTotal / memTaken.size();
 				avgMemForN[*n] = avgMem;
 			}
 

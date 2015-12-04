@@ -7,7 +7,10 @@ enum SortType {
 	SELECTION = 1,
 	INSERTION = 2,
 	SHELL = 3,
-	QUICK = 4
+	QUICK = 4,
+	MERGE = 5,
+	HYBRID_QUICK = 6,
+	HYBRID_MERGE = 7
 };
 
 /**
@@ -32,6 +35,7 @@ struct SortParams {
 	vector<int> gapVector;
 	//the function to use to generate gaps or CUSTOM to use your own gap vector
 	GapType gapType;
+	int hybridThreshold;
 	//sets all values to values that will "work" with sort functions
 	SortParams();
 };
